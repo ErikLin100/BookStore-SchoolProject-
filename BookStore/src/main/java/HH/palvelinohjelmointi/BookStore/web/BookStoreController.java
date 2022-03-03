@@ -1,8 +1,9 @@
 package HH.palvelinohjelmointi.BookStore.web;
 
 import HH.palvelinohjelmointi.BookStore.domain.Book;
-import HH.palvelinohjelmointi.BookStore.domain.BookRepository;
 
+import HH.palvelinohjelmointi.BookStore.domain.BookRepository;
+import HH.palvelinohjelmointi.BookStore.domain.CategoryRepository;
 
 import java.util.List;
 
@@ -18,19 +19,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class BookStoreController {
 	
 	@Autowired
-	BookRepository bookRepository; 
+	BookRepository repository; 
+	
+	@Autowired
+	CategoryRepository crepository; 
+	
+	
 	
 	
 	@RequestMapping(value = "/booklist", method = RequestMethod.GET)
-	public String getBooks(Model model) {
-			List<Book> book =  (List<Book>) bookRepository.findAll(); 
-			model.addAttribute("book", book); 
+	public String bookList(Model model) {
+			 
+			model.addAttribute("books", repository.findAll());  
 			return "booklist"; 
 								
 		}
 	@RequestMapping(value = "/newbook", method = RequestMethod.GET)
-	public String getaddNewBook(Model model) {
+	public String addBook(Model model) {
 		model.addAttribute("book", new Book());
+		model.addAttribute("categories", crepository.findAll());
 		return "addbook";
 	}
 
@@ -38,14 +45,14 @@ public class BookStoreController {
 	@RequestMapping(value = "/savebook", method = RequestMethod.POST)
 	public String saveBook(@ModelAttribute Book book) {
 		
-		bookRepository.save(book);
+		repository.save(book);
 		return "redirect:/booklist";
 	}
 
 	
 	@RequestMapping(value = "/deletebook/{id}", method = RequestMethod.GET)
 	public String deleteBook(@PathVariable("id") Long bookId) {
-		bookRepository.deleteById(bookId);
+		repository.deleteById(bookId);
 		return "redirect:../booklist";
 	}
 	

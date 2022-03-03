@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Bean;
 
 import HH.palvelinohjelmointi.BookStore.domain.Book;
 import HH.palvelinohjelmointi.BookStore.domain.BookRepository;
+import HH.palvelinohjelmointi.BookStore.domain.Category;
+import HH.palvelinohjelmointi.BookStore.domain.CategoryRepository;
+
 
 
 
@@ -25,27 +28,33 @@ public class BookStoreApplication {
 	
 	
 	@Bean
-	public CommandLineRunner demo(BookRepository bookRepository) 
+	public CommandLineRunner demo(BookRepository brepository, CategoryRepository crepository) 
 	{return (args) -> {
-	
-		Book b1 = new Book("Breathe: A Life in Flow", "Rickson Gracie", 2021,"978-0-06-301895-2", 27.99);
-		Book b2 = new Book("Naked economics", "Charles Wheelan", 2002,"978-0-393-35649-6", 16.95);
+		log.info("tallennetaan muutama kategoria ja kirjoja");
+		Category category1 = new Category("Scifi");
+		crepository.save(category1);
+		Category category2 = new Category("Elämänkerta");
+		crepository.save(category2);
+		Category category3 = new Category("Taloustiede");
+		crepository.save(category3);
 		
-		bookRepository.save(b1);
-		bookRepository.save(b2);
+		
+		brepository.save(new Book ("Breathe: A Life in Flow", "Rickson Gracie", 2021,"978-0-06-301895-2", 27.99, category2));
+		brepository.save(new Book ("Naked economics", "Charles Wheelan", 2002,"978-0-393-35649-6", 16.95, category3));
 		
 		
 		log.info("fetch all books");
-		for (Book book : bookRepository.findAll()) {
+		for (Book book : brepository.findAll()) {
 			log.info(book.toString());
 		}
-
+	
+		
 	};
 	
 	
 
 	}
-}
+	}
 	
 
 
